@@ -1,9 +1,7 @@
 source 'http://rubygems.org'
 
-if RUBY_VERSION < '1.9'
-  gem 'ruby-debug'
-else
-  gem 'ruby-debug19'
-end
+gem 'spree', '~> 3.1.0.rc1'
+gem 'spree_auth_devise', '~> 3.1.0.rc1'
+gem 'spree_api', '~> 3.1.0.rc1'
 
 gemspec
