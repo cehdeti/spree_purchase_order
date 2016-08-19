@@ -5,11 +5,11 @@ module Spree
     end
 
     def actions
-      %w{complete void}
+      %w{capture void}
     end
 
     # Indicates whether its possible to capture the payment
-    def can_complete?(payment)
+    def can_capture?(payment)
       ['checkout', 'pending'].include?(payment.state)
     end
 
@@ -18,20 +18,31 @@ module Spree
       payment.state != 'void'
     end
 
-    # copied in from spree 1.1
-    # https://github.com/fonemstr/spree/blob/169bd3d989e142b4f945ab4cd25eb946776c42ae/core/app/models/spree/payment_method/check.rb
-    def complete(*args)
-      ActiveMerchant::Billing::Response.new(true, "", {}, {})
+    def capture(*)
+      simulated_successful_billing_response
     end
 
-    # copied in from spree 1.1
-    # https://github.com/fonemstr/spree/blob/169bd3d989e142b4f945ab4cd25eb946776c42ae/core/app/models/spree/payment_method/check.rb
-    def void(*args)
-      ActiveMerchant::Billing::Response.new(true, "", {}, {})
+    def cancel(*)
+      simulated_successful_billing_response
+    end
+
+    def void(*)
+      simulated_successful_billing_response
     end
 
     def source_required?
       false
     end
+
+    def credit(*)
+      simulated_successful_billing_response
+    end
+
+    private
+
+    def simulated_successful_billing_response
+      ActiveMerchant::Billing::Response.new(true, "", {}, {})
+    end
+
   end
 end

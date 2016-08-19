@@ -1,3 +1,3 @@
 Spree::Payment.class_eval do
-	attr_accessible :po_number
+	attr_accessor :po_number
 end
