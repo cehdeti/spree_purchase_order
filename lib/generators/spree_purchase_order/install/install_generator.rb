@@ -5,7 +5,7 @@ module SpreePurchaseOrder
       class_option :auto_run_migrations, :type => :boolean, :default => false
 
       def add_migrations
-        run 'bundle exec rake railties:install:migrations FROM=spree_account_subscription'
+        run 'bundle exec rake railties:install:migrations FROM=spree_purchase_order'
       end
 
       def run_migrations

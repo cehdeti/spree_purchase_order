@@ -1,0 +1,28 @@
+<fieldset data-id="purchase_order">
+  <div id="purchase_order<%= payment_method.id %>" class="margint" data-hook>
+    <% param_prefix = "payment_source[#{payment_method.id}]" %>
+
+    <div data-hook="purchase_order_number" class="form-group">
+      <%= label_tag "purchase_order#{payment_method.id}", raw('Purchase Order Number:' + content_tag(:span, ' *', :class => 'required')) %>
+      <%= text_field_tag "payment[po_number]", @payment.po_number, id: "purchase_order#{payment_method.id}", class: 'required form-control', maxlength: 64 %>
+    </div>
+
+    <div data-hook="purchase_order_image" class="form-group">
+
+      <div class="col-md-6">
+        <div data-hook="file" class="form-group">
+          <%= f.label :po_image, Spree.t(:filename) %>
+          <%= f.file_field :po_image %>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <%= f.label :po_image, "Current Image" %>
+        <% if :po_image %>
+          <%= image_tag @payment.po_image.url, width: '100%'%>
+        <% end %>
+      </div>
+
+    </div>
+
+  </div>
+</fieldset>

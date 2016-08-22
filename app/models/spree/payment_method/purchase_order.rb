@@ -1,7 +1,7 @@
 module Spree
   class PaymentMethod::PurchaseOrder < PaymentMethod
   	def payment_source_class
-      PurchaseOrder
+      ::Spree::PurchaseOrder
     end
 
     def actions

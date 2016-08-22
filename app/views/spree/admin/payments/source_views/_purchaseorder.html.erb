@@ -1,0 +1,32 @@
+    <%= render partial: 'spree/admin/shared/error_messages', locals: { target: @payment } %>
+
+    <%= form_for @payment, url: "#{admin_order_payments_path(@order)}/#{@payment.number}" do |f| %>
+        <fieldset>
+
+          <div data-hook="admin_payment_form_fields">
+            <div class="form-group">
+              <%= f.label :amount, Spree.t(:amount) %>
+              <%= f.text_field :amount, :value => @order.display_outstanding_balance.money, :class => 'form-control' %>
+            </div>
+            <div class="form-group">
+              <strong><%= Spree.t(:payment_method) %>: Purchase Order</strong>
+
+              <%=render :partial => "spree/admin/payments/source_forms/purchaseorder",
+                        :locals => {
+                            :payment_method => @payment_method,
+                            :payment => @payment,
+                            :f => f
+                        }
+              %>
+            </div>
+          </div>
+
+
+
+
+
+          <div class="form-actions" data-hook="buttons">
+            <%= button @order.cart? ? Spree.t('actions.continue') : Spree.t('actions.update'), @order.cart? ? 'arrow-right' : 'save' %>
+          </div>
+        </fieldset>
+    <% end %>
