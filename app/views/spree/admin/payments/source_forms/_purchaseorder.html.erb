@@ -10,16 +10,17 @@
     <div data-hook="purchase_order_image" class="form-group">
 
       <div class="col-md-6">
-        <div data-hook="file" class="form-group">
-          <%= f.label :po_image, Spree.t(:filename) %>
-          <%= f.file_field :po_image %>
-        </div>
+        <%= f.label :po_image, "Current Document" %>
+        <br/>
+        <% if !:po_image.nil? %>
+          <a href="<%= @payment.po_image.url %>" target="_blank">Download: <%= @payment.po_image_file_name %></a>
+        <% end %>
       </div>
       <div class="col-md-6">
-        <%= f.label :po_image, "Current Image" %>
-        <% if :po_image %>
-          <%= image_tag @payment.po_image.url, width: '100%'%>
-        <% end %>
+        <div data-hook="file" class="form-group">
+          <%= f.label :po_image, "Upload new document"%>
+          <%= f.file_field :po_image %>
+        </div>
       </div>
 
     </div>
