@@ -10,12 +10,13 @@ module Spree
 
     # Indicates whether its possible to capture the payment
     def can_capture?(payment)
+
+      if !payment.po_number || !payment.po_image
+        return false
+      end
+
       ['checkout', 'pending'].include?(payment.state)
 
-      if ! payment.po_number || payment.po_image
-        logger.debug "cant capture, no po number or image"
-        false
-      end
     end
 
     # Indicates whether its possible to void the payment.
