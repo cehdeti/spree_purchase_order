@@ -4,22 +4,18 @@ Spree::Admin::PaymentsController.class_eval do
 
   def update
 
-    puts "update payment!! #{Spree::PermittedAttributes.payment_attributes}"
 
     invoke_callbacks(:update, :before)
 
     params.require(:payment).permit(:po_image)
 
     begin
-      puts "begin!!!"
       @payment[:po_number] = params[:payment][:po_number]
       if !params[:payment][:po_image].nil?
         @payment.po_image = params[:payment][:po_image]
       end
 
       if @payment.save
-        puts "HHHH"
-        puts "DID SAVE! #{@payment}, #{@payment.po_number}, #{@payment.payment_method}"
         invoke_callbacks(:update,:after)
         # Transition order as far as it will go.
         while @order.next; end

@@ -1,0 +1,45 @@
+<div class="panel panel-default" id="purchase_order_form" data-hook>
+
+  <div class="panel-heading">
+    <h3 class="panel-title">Purchase Order Details</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-12">
+        <p><strong>All Purchase Orders require a PO Number before placing an order as well as a digital copy of the Purchase order itself.</strong></p>
+        <p>If you cannot upload a digital version of your Purchase Order, it can be faxed to <a href="tel:612-888-8888">612-888-8888</a></p>
+        <p>Orders made with a Purchase Order as the form of payment will not be shipped or completed until the PO number and copy of the Purchase Order have been verified.</p>
+        <hr/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-xs-12">
+        <p class="field">
+
+          <%= label_tag "" do %>
+              <%= 'Purhase Order Number' %><abbr class="required" title="required"></abbr>
+          <% end %>
+          <br/>
+          <%= text_field_tag "", payment.po_number, :class => 'input required', :style=>'width:300px;', :readonly => true%>
+
+        </p>
+      </div>
+      <div class="col-md-6 col-xs-12">
+        <div data-hook="file" class="form-group">
+          <%= label_tag "", "PDF document of your Purchase Order"%><br/>
+          <% if payment.po_image_file_name? %>
+              <a href="<%= payment.po_image.url %>" target="_blank">Download: <%= payment.po_image_file_name %></a>
+          <% else %>
+            <h5>No PDF copy of your Purchase Order has been uploaded.</h5>
+            <p>Please fax a copy of your purchase order to <a href="tel:612-888-8888">612-888-8888</a></p>
+          <% end %>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+</div>
