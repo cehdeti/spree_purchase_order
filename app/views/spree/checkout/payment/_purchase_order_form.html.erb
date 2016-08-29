@@ -1,3 +1,4 @@
+<%if payment.payment_method.type=='Spree::PaymentMethod::PurchaseOrder' %>
 <div class="panel panel-default" id="purchase_order_form" data-hook>
   <%= hidden_field_tag "order[payments_attributes][][amount]"  %>
   <%= hidden_field_tag "order[payments_attributes][][payment_method_id]", payment.payment_method.id %>
@@ -36,6 +37,21 @@
       </div>
     </div>
 
-
-  </div>
+  <script type='text/javascript'>
+    $(document).ready(function(){
+      var form = $('#checkout_form_confirm');
+      form.submit(function(){
+        var po=$('#order_payments_attributes__po_number');
+        var poval = $.trim(po.val());
+        if( !poval.length) {
+          po.focus();
+          alert('Please fill out the Purchase Order Number!');
+          Spree.enableSave();
+          return false;
+        }
+        return true;
+      });
+    })
+  </script>
 </div>
+<% end %>

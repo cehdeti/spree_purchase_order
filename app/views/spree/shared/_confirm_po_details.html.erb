@@ -9,7 +9,13 @@
       <%= render payment %><br/>
       <% if payment.po_number %>
           <span>PO Number: </span><span><strong><%= payment.po_number%></strong></span><br/>
-          <a href="#purchase_order_form">View Purchase Order Details</a></p>
+
+          <% if order.payment_state=='paid' %>
+          <% else %>
+              <p><strong>This Purchase Order has not yet been processed.</strong></p>
+              <p>You will receive a confirmation email when the Purchase Order has been verified.</p>
+          <% end %>
+
       <% end %>
 
   <% end %>
