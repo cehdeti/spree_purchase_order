@@ -1,0 +1,63 @@
+<%= Spree.t('order_mailer.confirm_email.dear_customer') %>
+
+<%= Spree.t('order_mailer.confirm_email.instructions') %>
+
+
+<%if @payment.payment_method.type=='Spree::PaymentMethod::PurchaseOrder' %>
+============================================================
+    <%if @completed %>
+Your purchrase order (<%= @payment.po_number %>) has been approved.
+    <% else %>
+Your purchase order (<%= @payment.po_number %>)  has not yet been approved.
+This is a summary of your order.  No items in your order will be fulfilled until the purchase order has been verified. You will receive an email with further fulfillment details when the purchase order has been approved.
+    <% end %>
+============================================================
+<% end %>
+
+============================================================
+<%= Spree.t('order_mailer.confirm_email.order_summary', number: @order.number) %>
+============================================================
+
+<% @order.line_items.each do |item| %>
+  <%= raw(item.variant.product.name) %> <%= raw(item.variant.options_text) -%> (<%=item.quantity%>) @ <%= item.single_money %>: <%= item.display_amount %>
+<% end %>
+
+  <%= Spree.t('order_mailer.subtotal') %> <%= @order.display_item_total %>
+<% @order.shipments.group_by { |s| s.selected_shipping_rate.try(:name) }.each do |name, shipments| %>
+  <%= Spree.t(:shipping) %> <%= name %>: <%= Spree::Money.new(shipments.sum(&:discounted_cost), currency: @order.currency) %>
+<% end %>
+<% @order.adjustments.eligible.each do |adjustment| %>
+  <%= raw(adjustment.label) %>: <%= adjustment.display_amount %>
+<% end %>
+  <%= Spree.t('order_mailer.total') %> <%= @order.display_total %>
+============================================================
+
+<% if @subscription and @completed%>
+============================================================
+Subscription Information
+============================================================
+
+This subscription has <%= pluralize(@subscription.num_seats, 'seat') %>
+It will expire on <%= @subscription.end_datetime%>
+In order to activate any other seats in this subscription, please share this token.
+<%=@subscription.token%>
+
+<% end %>
+
+<% if @order.some_digital? and @completed %>
+============================================================
+<%= Spree.t('digital_download_links') %>
+============================================================
+
+<% @order.line_items.each do |item| %>
+  <% if item.digital? %>
+    <%= raw item.variant.name %>:
+    <% item.digital_links.each do |link| %>
+  <%= digital_url secret: link.secret %>
+    <% end %>
+  <% end %>
+<% end %>
+============================================================
+
+<% end %>
+<%= Spree.t('order_mailer.confirm_email.thanks') %>

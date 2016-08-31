@@ -6,5 +6,15 @@ Spree::Payment.class_eval do
 
 	validates_attachment :po_image, :content_type => {:content_type => %w(image/jpeg image/jpg image/png application/pdf application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document)}
 
+	state_machine initial: :checkout do
+		after_transition to: :completed, do: :send_payment_email!
+	end
+
+	def send_payment_email!
+		if self.payment_method.type=='Spree::PaymentMethod::PurchaseOrder'
+			Spree::PaymentMailer.payment_complete_email(self.order).deliver_later
+		end
+
+	end
 
 end

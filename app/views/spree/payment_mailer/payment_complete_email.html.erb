@@ -1,0 +1,125 @@
+<table class="row header">
+  <tr>
+    <td>
+      <p class="lede">
+        <%= Spree.t('order_mailer.confirm_email.dear_customer') %>
+      </p>
+      <p>
+        <%= Spree.t('order_mailer.confirm_email.instructions') %>
+      </p>
+
+      <br />
+
+    <%if @payment.payment_method.type=='Spree::PaymentMethod::PurchaseOrder' %>
+      <%if @completed %>
+          <h6>Your purchrase order (<%= @payment.po_number %>) has been approved.</h6>
+      <% else %>
+          <h6>Your purchase order (<%= @payment.po_number %>)  has not yet been approved.</h6>
+          <p>This is a summary of your order.  No items in your order will be fulfilled until the purchase order has been verified. You will receive an email with further fulfillment details when the purchase order has been approved.</p>
+      <% end %>
+      <hr/>
+    <% end %>
+    <br />
+      <h5>
+        <%= Spree.t('order_mailer.confirm_email.order_summary', number: @order.number) %>
+      </h5>
+      <br />
+      <table class="container">
+        <tr>
+          <td class="wrapper last">
+            <table class="twelve columns">
+              <%= render collection: @order.line_items, partial: 'spree/shared/mailer_line_item', as: :line_item %>
+              <%= render 'spree/order_mailer/subtotal', order: @order %>
+              <% if @order.line_item_adjustments.exists? %>
+                <% if @order.all_adjustments.promotion.eligible.exists? %>
+                  <% @order.all_adjustments.promotion.eligible.group_by(&:label).each do |label, adjustments| %>
+                    <tr>
+                      <td class="six sub-columns">
+                        <%= Spree.t(:promotion) %> <%= label %>:
+                      </td>
+                      <td class="six sub-columns last right">
+                        <%= Spree::Money.new(adjustments.sum(&:amount), currency: @order.currency) %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <% @order.shipments.group_by { |s| s.selected_shipping_rate.try(:name) }.each do |name, shipments| %>
+                <tr>
+                  <td class="six sub-columns">
+                    <%= Spree.t(:shipping) %> <%= name %>:
+                  </td>
+                  <td class="six sub-columns last right">
+                    <%= Spree::Money.new(shipments.sum(&:discounted_cost), currency: @order.currency) %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if @order.all_adjustments.eligible.tax.exists? %>
+                <% @order.all_adjustments.eligible.tax.group_by(&:label).each do |label, adjustments| %>
+                  <tr>
+                    <td class="six sub-columns"><%= label %>:</td>
+                    <td class="six sub-columns last right">
+                      <%= Spree::Money.new(adjustments.sum(&:amount), currency: @order.currency) %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+              <% @order.adjustments.eligible.each do |adjustment| %>
+                <% next if (adjustment.source_type == 'Spree::TaxRate') || (adjustment.amount == 0) %>
+                <%= render 'spree/order_mailer/adjustment', adjustment: adjustment %>
+              <% end %>
+              <%= render 'spree/order_mailer/total', order: @order %>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <br/>
+      <br/>
+      <% if @subscription and @completed %>
+          <hr/>
+          <h5>Subscription Information</h5>
+          <p>This subscription has <em><%= pluralize(@subscription.num_seats, 'seat') %></em></p>
+          <p>It will expire on <strong><%= @subscription.end_datetime%></strong></p>
+          <p>In order to activate any other seats in this subscription, please share this token.</p>
+          <pre><%=@subscription.token%></pre>
+          <hr/>
+      <% end %>
+
+      <% if @order.some_digital? and @completed %>
+        <br />
+        <br />
+        <h5><%= Spree.t('digital_download_links') %></h5>
+        <table class="container">
+          <tr>
+            <td class="wrapper last">
+              <table class="twelve columns">
+                <% @order.line_items.each do |item| %>
+                  <% if item.digital? %>
+                    <tr>
+                      <td><%= raw item.variant.name %></td>
+                      <td>
+                        <ul>
+                        <% item.digital_links.each do |link| %>
+                          <%- link = digital_url secret: link.secret %>
+                          <li><%= link_to link, link %></li>
+                        <% end %>
+                        </ul>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+            </td>
+          </tr>
+        </table>
+      <% end %>
+
+      <br />
+      <br />
+      <p>
+        <%= Spree.t('order_mailer.confirm_email.thanks') %>
+      </p>
+    </td>
+    <td class="expander"></td>
+  </tr>
+</table>
