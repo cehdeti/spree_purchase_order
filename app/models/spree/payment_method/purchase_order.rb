@@ -50,5 +50,7 @@ module Spree
       ActiveMerchant::Billing::Response.new(true, "", {}, {})
     end
 
+
+
   end
 end

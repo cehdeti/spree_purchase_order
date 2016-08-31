@@ -11,7 +11,8 @@ Spree::Payment.class_eval do
 	end
 
 	def send_payment_email!
-		if self.payment_method.type=='Spree::PaymentMethod::PurchaseOrder'
+    if self.order.payment_state=='paid' && self.payment_method.type=='Spree::PaymentMethod::PurchaseOrder'
+      logger.debug 'sending payment email!'
 			Spree::PaymentMailer.payment_complete_email(self.order).deliver_later
 		end
 
