@@ -6,6 +6,7 @@
       <th class="text-center"><%= Spree.t(:amount) %></th>
       <th class="text-center"><%= Spree.t(:payment_method) %></th>
       <th class="text-center">Transaction ID or PO Number</th>
+      <th class="text-center">Purchase Order Document</th>
       <th class="text-center"><%= Spree.t(:payment_state) %></th>
       <th class="actions text-center"></th>
     </tr>
@@ -23,6 +24,19 @@
               <%= payment.po_number %>
           <% else %>
               <%= payment.transaction_id %>
+          <% end %>
+        </td>
+        <td class="text-center">
+          <% if payment.payment_method.type == 'Spree::PaymentMethod::PurchaseOrder'%>
+              <% if payment.po_image_file_name? %>
+                  <a href="<%= payment.po_image.url %>" target="_blank">Download: <%= payment.po_image_file_name %></a>
+
+              <% else %>
+                  <span>No Document</span>
+              <% end %>
+
+          <% else %>
+              <span>NA</span>
           <% end %>
         </td>
         <td class="text-center">
