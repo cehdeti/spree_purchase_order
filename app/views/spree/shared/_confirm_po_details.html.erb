@@ -3,7 +3,7 @@
   <% order.payments.valid.each do |payment| %>
       <% if payment.payment_method.type=='Spree::PaymentMethod::PurchaseOrder'%>
          <% if payment.po_number.nil? || payment.po_image.nil? %>
-            <p><a href="#purchase_order_form">Po Number or PO File needed</a></p>
+            <p><a href="#purchase_order_form">PO Number or PO File needed</a></p>
          <% end %>
       <% end %>
       <%= render partial: 'spree/shared/payment', object: payment %><br/>

@@ -1,22 +1,14 @@
 module Spree
-  class PaymentMethod::PurchaseOrder < PaymentMethod
-  	def payment_source_class
-      ::Spree::PurchaseOrder
-    end
-
+  class PaymentMethod::PurchaseOrder < ::Spree::PaymentMethod
     def actions
-      %w{capture void}
+      %w(capture void)
     end
 
     # Indicates whether its possible to capture the payment
     def can_capture?(payment)
-
-      if !payment.po_number || !payment.po_image
-        return false
-      end
-
-      ['checkout', 'pending'].include?(payment.state)
-
+      payment.po_number.present? &&
+        payment.po_image.present? &&
+        %w(checkout pending).include?(payment.state)
     end
 
     # Indicates whether its possible to void the payment.
@@ -47,10 +39,7 @@ module Spree
     private
 
     def simulated_successful_billing_response
-      ActiveMerchant::Billing::Response.new(true, "", {}, {})
+      ActiveMerchant::Billing::Response.new(true, '', {}, {})
     end
-
-
-
   end
 end
