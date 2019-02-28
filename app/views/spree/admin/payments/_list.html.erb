@@ -13,30 +13,27 @@
   </thead>
   <tbody>
     <% payments.each do |payment| %>
-      <tr id="<%= dom_id(payment) %>" data-hook="payments_row">
+      <tr id="<%= dom_id(payment) %>" data-hook="payments_row" data-number="<%= payment.number %>">
         <td><%= link_to payment.number, spree.admin_order_payment_path(@order, payment) %></td>
         <td><%= pretty_time(payment.created_at) %></td>
         <td class="amount text-center"><%= payment.display_amount %></td>
         <td class="text-center"><%= payment_method_name(payment) %></td>
         <td class="text-center">
-
           <% if payment.payment_method.type == 'Spree::PaymentMethod::PurchaseOrder'%>
-              <%= payment.po_number %>
+            <%= payment.po_number %>
           <% else %>
-              <%= payment.transaction_id %>
+            <%= payment.transaction_id %>
           <% end %>
         </td>
         <td class="text-center">
           <% if payment.payment_method.type == 'Spree::PaymentMethod::PurchaseOrder'%>
-              <% if payment.po_image_file_name? %>
-                  <a href="<%= payment.po_image.url %>" target="_blank">Download: <%= payment.po_image_file_name %></a>
-
-              <% else %>
-                  <span>No Document</span>
-              <% end %>
-
+            <% if payment.po_image? %>
+              <a href="<%= payment.po_image.url %>" target="_blank">Download: <%= payment.po_image_file_name %></a>
+            <% else %>
+              <span>No Document</span>
+            <% end %>
           <% else %>
-              <span>NA</span>
+            <span>N/A</span>
           <% end %>
         </td>
         <td class="text-center">

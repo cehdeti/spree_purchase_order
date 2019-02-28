@@ -6,9 +6,7 @@ module Spree
 
     # Indicates whether its possible to capture the payment
     def can_capture?(payment)
-      payment.po_number.present? &&
-        payment.po_image.present? &&
-        %w(checkout pending).include?(payment.state)
+      payment.po_number? && %w(checkout pending).include?(payment.state)
     end
 
     # Indicates whether its possible to void the payment.
