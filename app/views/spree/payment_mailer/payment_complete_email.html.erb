@@ -10,12 +10,12 @@
 
       <br />
 
-    <%if @payment.payment_method.type=='Spree::PaymentMethod::PurchaseOrder' %>
-      <%if @completed %>
-          <h6>Your purchrase order (<%= @payment.po_number %>) has been approved.</h6>
+    <% if @payment.try(:purchase_order?) %>
+      <% if @completed %>
+        <h6>Your purchrase order (<%= @payment.po_number %>) has been approved.</h6>
       <% else %>
-          <h6>Your purchase order (<%= @payment.po_number %>)  has not yet been approved.</h6>
-          <p>This is a summary of your order.  No items in your order will be fulfilled until the purchase order has been verified. You will receive an email with further fulfillment details when the purchase order has been approved.</p>
+        <h6>Your purchase order (<%= @payment.po_number %>)  has not yet been approved.</h6>
+        <p>This is a summary of your order.  No items in your order will be fulfilled until the purchase order has been verified. You will receive an email with further fulfillment details when the purchase order has been approved.</p>
       <% end %>
       <hr/>
     <% end %>

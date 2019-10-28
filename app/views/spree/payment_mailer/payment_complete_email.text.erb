@@ -3,7 +3,7 @@
 <%= Spree.t('order_mailer.confirm_email.instructions') %>
 
 
-<%if @payment.payment_method.type=='Spree::PaymentMethod::PurchaseOrder' %>
+<% if @payment.try(:purchase_order?) %>
 ============================================================
     <%if @completed %>
 Your purchrase order (<%= @payment.po_number %>) has been approved.

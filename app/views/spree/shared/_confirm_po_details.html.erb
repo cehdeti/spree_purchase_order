@@ -1,22 +1,17 @@
 <h4><%= Spree.t(:payment_information) %> <%= link_to "(#{Spree.t(:edit)})", checkout_state_path(:payment) unless order.completed? %></h4>
 <div class="payment-info">
   <% order.payments.valid.each do |payment| %>
-      <% if payment.payment_method.type=='Spree::PaymentMethod::PurchaseOrder'%>
-         <% if payment.po_number.nil? || payment.po_image.nil? %>
-            <p><a href="#purchase_order_form">PO Number or PO File needed</a></p>
-         <% end %>
+    <% if payment.purchase_order? && (payment.po_number.nil? || payment.po_image.nil?) %>
+      <p><a href="#purchase_order_form">PO Number or PO File needed</a></p>
+    <% end %>
+    <%= render partial: 'spree/shared/payment', object: payment %><br/>
+    <% if payment.po_number %>
+      <span>PO Number: </span><span><strong><%= payment.po_number%></strong></span><br/>
+
+      <% unless order.payment_state == 'paid' %>
+        <p><strong>This Purchase Order has not yet been processed.</strong></p>
+        <p>You will receive a confirmation email when the Purchase Order has been verified.</p>
       <% end %>
-      <%= render partial: 'spree/shared/payment', object: payment %><br/>
-      <% if payment.po_number %>
-          <span>PO Number: </span><span><strong><%= payment.po_number%></strong></span><br/>
-
-          <% if order.payment_state=='paid' %>
-          <% else %>
-              <p><strong>This Purchase Order has not yet been processed.</strong></p>
-              <p>You will receive a confirmation email when the Purchase Order has been verified.</p>
-          <% end %>
-
-      <% end %>
-
+    <% end %>
   <% end %>
 </div>
